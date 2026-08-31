@@ -16,6 +16,24 @@ footer {visibility: hidden !important; display: none !important;}
 header {visibility: hidden;}
 div[data-testid="stToolbar"] {display: none !important;}
 div[data-testid="stDecoration"] {display: none !important;}
+/* Target footer specifically */
+footer + div {display: none !important;}
+div[class*="footer"], 
+div[class*="Footer"] {display: none !important;}
+/* Catch any remaining elements */
+[data-testid="stFooter"], 
+[data-testid="footer"] {display: none !important;}
+div[class*="viewerBadge"], 
+[class*="viewerBadge"], 
+footer + div, 
+.styles_viewerBadge__1yB5_ {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    width: 0 !important;
+}
 /* Completely disable highlighting and copying text inside the table */
 table {
     -webkit-user-select: none !important;
@@ -37,34 +55,8 @@ table a, table a:link, table a:visited {
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# JavaScript to remove profile preview and other bottom-right icons
-hide_icons_script = """
-<script>
-setTimeout(function() {
-    // Remove profile preview avatar
-    const profilePreview = document.querySelector('[data-testid="appCreatorAvatar"]');
-    if (profilePreview) profilePreview.closest('div').style.display = 'none';
-    
-    // Remove the share/crown icon button
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(btn => {
-        if (btn.innerHTML.includes('share') || btn.textContent.includes('Share')) {
-            btn.style.display = 'none';
-        }
-    });
-    
-    // Remove any remaining footer links to Streamlit/GitHub
-    const links = document.querySelectorAll('a[href*="streamlit"]');
-    links.forEach(link => link.style.display = 'none');
-}, 100);
-</script>
-"""
-st.markdown(hide_icons_script, unsafe_allow_html=True)
-
 st.title("🏛️ TRNUC YouTube Index Explorer")
 st.markdown("Search and browse Truth, Reconciliation and National Unity Commission records.")
-
-# ... rest of your code
 
 # 2. Load Data from Local Repository File
 @st.cache_data
@@ -93,43 +85,23 @@ def load_data():
 try:
     df = load_data()
 
-    # 3. Filter Controls inside a Form with a clear submit button for Mobile
-    st.markdown("### 🔍 Filters")
+    # 3. Filter Controls with heading and button on same line
+    col_heading, col_button = st.columns([0.85, 0.15])
+    with col_heading:
+        st.markdown("### 🔍 Filters")
     
     with st.form(key='search_form'):
         search_term = st.text_input("Search by Participant Name", "")
-        seq_filter = st.text_input("Filter by Sequence No", "")
-
-        valid_dates = df['ParsedDate'].dropna()
-        if not valid_dates.empty:
-            min_date = valid_dates.min().date()
-            max_date = valid_dates.max().date()
-            date_range = st.date_input(
-                "Filter by Date Range",
-                value=(min_date, max_date),
-                min_value=min_date,
-                max_value=max_date
-            )
-        else:
-            date_range = None
-
-        submit_button = st.form_submit_button(label="🔍 Apply Search Filters")
+        
+        col1, col2 = st.columns([0.85, 0.15])
+        with col2:
+            st.form_submit_button(label="Apply Filter")
 
     # 4. Apply Filters
     filtered_df = df.copy()
 
     if search_term:
         filtered_df = filtered_df[filtered_df['Participant'].str.contains(search_term, case=False, na=False)]
-
-    if seq_filter:
-        filtered_df = filtered_df[filtered_df['SequenceNo'].astype(str).str.contains(seq_filter, case=False, na=False)]
-
-    if date_range and isinstance(date_range, tuple) and len(date_range) == 2:
-        start_date, end_date = date_range
-        filtered_df = filtered_df[
-            (filtered_df['ParsedDate'].dt.date >= start_date) & 
-            (filtered_df['ParsedDate'].dt.date <= end_date)
-        ]
 
     # 5. Display the Data using st.table (prevents text copying and cell highlighting)
     st.markdown("---")
