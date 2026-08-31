@@ -85,16 +85,11 @@ def load_data():
 try:
     df = load_data()
 
-    # 3. Filter Controls with heading and button on same line
+    # 3. Filter Controls
     st.markdown("### 🔍 Filters")
     
-    col_button, col_spacer, col_input = st.columns([0.10, 0.02, 0.88])
-    
-    with col_button:
-        apply_filter = st.button("Apply Filter", use_container_width=True, key="apply_btn")
-    
-    with col_input:
-        search_term = st.text_input("Search by Participant Name", "", label_visibility="collapsed", key="search_input")
+    search_term = st.text_input("Search by Participant", "", key="search_input")
+    apply_filter = st.button("Apply Filter", use_container_width=False, key="apply_btn")
 
     # 4. Apply Filters
     filtered_df = df.copy()
