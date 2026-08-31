@@ -3,7 +3,7 @@ import pandas as pd
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="TRNUC YouTube Index Explorer",
+    page_title="TRNUC YouTube Index Explorer...",
     page_icon="🏛️",
     layout="wide"
 )
@@ -55,7 +55,7 @@ table a, table a:link, table a:visited {
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-st.title("🏛️ TRNUC YouTube Index Explorer")
+st.title("🏛️ TRNUC YouTube Index Explorer...")
 st.markdown("Search and browse Truth, Reconciliation and National Unity Commission records.")
 
 # 2. Load Data from Local Repository File
