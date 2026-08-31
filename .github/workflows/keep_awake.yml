@@ -1,0 +1,43 @@
+name: Wake Streamlit Apps
+
+on:
+  schedule:
+    - cron: "0 */4 * * *" # Runs every 6 hours
+  workflow_dispatch:
+
+jobs:
+  ping-apps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install selenium webdriver-manager
+
+      - name: Run wake script
+        env:
+          APP_URLS: "https://tna3jnkz2pgj5h8ve9x98a.streamlit.app/,https://mylinks-uwyddaiuyvjqdkgp8ckmpw.streamlit.app/,https://hahebhn6ps9yahvskp9r4d.streamlit.app/"
+        run: |
+          python -c '
+          import os, time
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          urls = os.environ["APP_URLS"].split(",")
+          options = Options()
+          options.add_argument("--headless=new")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+
+          driver = webdriver.Chrome(options=options)
+          try:
+              for url in urls:
+                  print(f"Visiting {url.strip()}...")
+                  driver.get(url.strip())
+                  time.sleep(15) # Wait for the page/app container to render
+          finally:
+              driver.quit()
+          '
