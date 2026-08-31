@@ -19,7 +19,7 @@ jobs:
 
       - name: Run wake script
         env:
-          APP_URLS: "https://tna3jnkz2pgj5h8ve9x98a.streamlit.app/,https://mylinks-uwyddaiuyvjqdkgp8ckmpw.streamlit.app/,https://hahebhn6ps9yahvskp9r4d.streamlit.app/"
+          APP_URLS: "https://wwwolcvwx3d6njj8cjwx5w.streamlit.app/,https://tna3jnkz2pgj5h8ve9x98a.streamlit.app/,https://mylinks-uwyddaiuyvjqdkgp8ckmpw.streamlit.app/,https://hahebhn6ps9yahvskp9r4d.streamlit.app/"
         run: |
           python -c '
           import os, time
