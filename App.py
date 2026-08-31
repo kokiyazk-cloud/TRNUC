@@ -86,21 +86,20 @@ try:
     df = load_data()
 
     # 3. Filter Controls with heading and button on same line
-    col_heading, col_button = st.columns([0.85, 0.15])
-    with col_heading:
-        st.markdown("### 🔍 Filters")
+    st.markdown("### 🔍 Filters")
     
-    with st.form(key='search_form'):
-        search_term = st.text_input("Search by Participant Name", "")
-        
-        col1, col2 = st.columns([0.85, 0.15])
-        with col2:
-            st.form_submit_button(label="Apply Filter")
+    col_button, col_spacer, col_input = st.columns([0.10, 0.02, 0.88])
+    
+    with col_button:
+        apply_filter = st.button("Apply Filter", use_container_width=True, key="apply_btn")
+    
+    with col_input:
+        search_term = st.text_input("Search by Participant Name", "", label_visibility="collapsed", key="search_input")
 
     # 4. Apply Filters
     filtered_df = df.copy()
 
-    if search_term:
+    if apply_filter and search_term:
         filtered_df = filtered_df[filtered_df['Participant'].str.contains(search_term, case=False, na=False)]
 
     # 5. Display the Data using st.table (prevents text copying and cell highlighting)
